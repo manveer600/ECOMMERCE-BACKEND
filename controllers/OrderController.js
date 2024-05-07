@@ -4,7 +4,6 @@ exports.fetchOrderByUser = async (req, res) => {
     const userId = req.user.id;
     try {
         const orders = await OrdersModel.find({ loggedInUserId: userId }).populate('loggedInUserId');
-        console.log("orders", orders);
         return res.status(201).json({
             success: true,
             message: 'Order Fetched Successfully',

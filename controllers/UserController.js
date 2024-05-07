@@ -64,7 +64,6 @@ exports.createUser = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
-    console.log('I am inside login user controller');
     const { email, password } = req.body;
     if (!email || !password) {
         return res.status(400).json({
@@ -93,7 +92,6 @@ exports.loginUser = async (req, res) => {
     user.password = undefined;
 
     res.cookie('token', token, cookieOptions);
-    console.log('token mil gya paaji', token);
     return res.json({
         success: true,
         message: 'User loggedIn successfully',

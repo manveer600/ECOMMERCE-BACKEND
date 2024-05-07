@@ -1,7 +1,6 @@
 const BrandModel = require("../models/BrandModel")
 
 const fetchBrands = async(req,res) => {
-    console.log('MAI BRAND WALE CONTROLLER M HOON', req.user);
     try{
         const brands = await BrandModel.find({}).exec();
         res.status(201).json({
