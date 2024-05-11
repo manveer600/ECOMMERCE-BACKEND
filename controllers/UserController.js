@@ -100,6 +100,21 @@ exports.loginUser = async (req, res) => {
     });
 }
 
+
+exports.checkAuth = async (req, res) => {
+    console.log('req.user is', req.user);
+    const userId = req.user.id;
+
+    const existingUser = await UserModel.findById(userId);
+    console.log(existingUser);
+
+    return res.status(200).json({
+        user:existingUser,
+        token: req.user.token,
+        success:true,
+    })
+}
+
 exports.logoutUser = async (req, res) => {
     res.cookie('token', null, {
         secure: true,

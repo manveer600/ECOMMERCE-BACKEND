@@ -9,9 +9,8 @@ module.exports.isLoggedIn = async(req, res, next) => {
             })
         }
 
-
         const userDetails = await jwt.verify(token, process.env.SECRET);
-        req.user = userDetails;
+        req.user = {...userDetails, token};
         return next();
         
     } catch (e) {
