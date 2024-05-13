@@ -45,16 +45,12 @@ const calculateOrderAmount = (items) => {
 server.post("/create-payment-intent", async (req, res) => {
   try {
     const { totalAmount } = req.body;
-    console.log('total amount got is', totalAmount);
-    console.log('items got from req.body', req.body);
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: totalAmount * 100,
       currency: "inr",
     });
 
-    console.log('payment INTENT', paymentIntent);
-    console.log(paymentIntent.client_secret);
 
     res.send({
       clientSecret: paymentIntent.client_secret,

@@ -102,30 +102,42 @@ exports.loginUser = async (req, res) => {
 
 
 exports.checkAuth = async (req, res) => {
-    console.log('req.user is', req.user);
-    const userId = req.user.id;
+    try {
+        const userId = req.user.id;
 
-    const existingUser = await UserModel.findById(userId);
-    console.log(existingUser);
+        const existingUser = await UserModel.findById(userId);
 
-    return res.status(200).json({
-        user:existingUser,
-        token: req.user.token,
-        success:true,
-    })
+        return res.status(200).json({
+            user: existingUser,
+            token: req.user.token,
+            success: true,
+        })
+    } catch (error) {
+        console.log("error while checking auth");
+        return res.status(400).json({
+            success: false,
+            message: error
+        })
+    }
 }
 
 exports.logoutUser = async (req, res) => {
-    res.cookie('token', null, {
-        secure: true,
-        expires: new Date(Date.now() + 0),
-        httpOnly: true,
-        sameSite: "none"
-    })
-        .status(200).json({
-            success: true,
-            message: 'User logged out successfully'
+    try {
+        res.cookie('token', null, {
+            secure: true,
+            expires: new Date(Date.now() + 0),
+            httpOnly: true,
+            sameSite: "none"
+        }).status(200).json({
+                success: true,
+                message: 'User logged out successfully'
+            })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Unable to logg out'
         })
+    }
 }
 
 exports.fetchAllUsers = async (req, res) => {

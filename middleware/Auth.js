@@ -3,6 +3,7 @@ module.exports.isLoggedIn = async(req, res, next) => {
     try {
         const token  = req.cookies.token;
         if (!token) {   
+            console.log('unable to find the token');
             return res.status(400).json({
                 success:false,
                 message:"You are not authenticated, Kindly Login first"
@@ -11,7 +12,7 @@ module.exports.isLoggedIn = async(req, res, next) => {
 
         const userDetails = await jwt.verify(token, process.env.SECRET);
         req.user = {...userDetails, token};
-        return next();
+        next();
         
     } catch (e) {
         return res.status(400).json({
