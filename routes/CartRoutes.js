@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/',isLoggedIn, fetchCartByUser);
 router.post('/',isLoggedIn, addToCart);
 router.delete('/:itemId',isLoggedIn, deleteCart)
-router.patch('/:productId/:userId',isLoggedIn, updateItemsInCart)
+router.patch('/:productId',isLoggedIn, updateItemsInCart)
 
 
 module.exports = router;
