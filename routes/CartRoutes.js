@@ -1,6 +1,6 @@
 const {addToCart, fetchCartByUser, updateItemsInCart, deleteCart} = require('../controllers/CartController.js')
 const express = require('express');
-const { isLoggedIn } = require('../middleware/auth.js');
+const { isLoggedIn } = require('../middleware/Auth');
 
 const router = express.Router();
 
