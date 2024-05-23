@@ -25,11 +25,18 @@ mongoose.connect(process.env.DATABASE_URL).then((conn) => {
 });
 
 server.use(cors({
-  origin: "http://localhost:3000",
   origin: process.env.FRONTEND_URL,
   credentials: true
 }
 ));
+
+
+server.get('/', (req,res) => {
+  return res.status(200).json({
+    status:success,
+    message:'I am at home'
+  })
+})
 
 server.use(cookieParser());
 server.use(morgan('dev'));
