@@ -26,20 +26,15 @@ mongoose.connect(process.env.DATABASE_URL).then((conn) => {
 
 server.use(cors({
   origin: "http://localhost:3000",
+  origin: process.env.FRONTEND_URL,
   credentials: true
 }
 ));
-server.use(cookieParser());
 
+server.use(cookieParser());
 server.use(morgan('dev'));
 server.use(express.json());
 
-
-
-
-const calculateOrderAmount = (items) => {
-  return 1400;
-};
 
 
 server.post("/create-payment-intent", async (req, res) => {

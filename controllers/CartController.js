@@ -49,7 +49,7 @@ exports.updateItemsInCart = async (req, res) => {
     const populatedData = await data.populate(['userId', 'productId']);
     console.log('populateddata', populatedData);
     return res.status(200).json({
-        status: 'success',
+        success: true,
         message: "Cart Updated Successfully",
         updatedItem: populatedData
     })

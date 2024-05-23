@@ -6,7 +6,7 @@ exports.createProduct = async (req, res) => {
         return res.status(201).json({
             success:true,
             message: 'Product Created Successfully',
-            Product: newProduct
+            product: newProduct
         })
     } catch (err) {
         console.log('Error creating a product', err);
@@ -14,7 +14,6 @@ exports.createProduct = async (req, res) => {
 
     }
 }
-
 
 exports.fetchAllProducts = async (req, res) => {
     let query = ProductModel.find({deleted:{$ne:true}});
@@ -56,11 +55,10 @@ exports.fetchAllProducts = async (req, res) => {
             totalDocs:totalDocs
         })
     } catch (err) {
-        console.log('Error creating a product', err);
-        return res.status(500).json({ message: 'Error creating a product' });
+        console.log('Error getting a product', err);
+        return res.status(500).json({ message: 'Error getting a product' });
     }
 }
-
 
 exports.fetchProductById = async (req, res) => {
     const id = req.params.id;
@@ -81,7 +79,6 @@ exports.fetchProductById = async (req, res) => {
     }
 
 }
-
 
 exports.updateProduct = async (req, res) => {
     const id = req.params.id;

@@ -230,7 +230,7 @@ exports.forgotPassword = async (req, res) => {
         console.log('url is', url);
         const subject = 'Reset Password Link';
         const text = "Your reset password link";
-        const html = `<h3><b>Your reset password link is this <a href='${url}'> Reset Password Link</a>. You can click here to reset your password<b/><h3>`
+        const html = `<h3><b>Your reset password link is this <a href='${url}'> Reset Password Link</a>. You can click here to reset your password.<b/><h3></br>Remember the link is only valid till 15 mins.`
         const emailSend = await sendEmail(email, subject, text, html);
         console.log("emailSend",emailSend);
         if (emailSend) {
@@ -255,7 +255,6 @@ exports.forgotPassword = async (req, res) => {
 }
 
 exports.resetPassword = async(req,res) => {
-    console.log('inside reset password');
     const {resetPasswordToken} = req.params;
     const password = req.body.password;
 
@@ -274,6 +273,8 @@ exports.resetPassword = async(req,res) => {
         })
     }
 
+
+
     const hashedResetPasswordToken = await crypto.createHash('sha256').update(resetPasswordToken).digest("hex");
     console.log('hashedCryptoResetToken', hashedResetPasswordToken);
 
@@ -282,7 +283,10 @@ exports.resetPassword = async(req,res) => {
         forgotPasswordExpiry:{
             $gt:Date.now(),
         }
-    })
+    });
+
+
+
 
     if(!user){
         return res.status(400).json({
