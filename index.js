@@ -33,7 +33,7 @@ server.use(cors({
 
 server.get('/', (req,res) => {
   return res.status(200).json({
-    status:success,
+    success:true,
     message:'I am at home'
   })
 })
