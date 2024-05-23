@@ -1,6 +1,6 @@
 const {addOrder, fetchOrderByUser, deleteOrder, updateOrder} = require('../controllers/OrderController.js')
 const express = require('express');
-const { isLoggedIn } = require('../middleware/auth.js');
+const { isLoggedIn } = require('../middleware/Auth');
 
 const router = express.Router();
 
