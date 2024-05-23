@@ -1,6 +1,6 @@
 const express = require('express');
 const { createUser, fetchAllUsers, fetchUserById, updateUser, loginUser, logoutUser,checkAuth, forgotPassword, resetPassword } = require('../controllers/UserController.js');
-const { isLoggedIn } = require('../middleware/auth.js');
+const { isLoggedIn } = require('../middleware/Auth');
 
 const router = express.Router();
 router.post('/signup', createUser);
