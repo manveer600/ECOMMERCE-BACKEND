@@ -3,7 +3,6 @@ module.exports.isLoggedIn = async(req, res, next) => {
     try {
         const token  = req.cookies.token;
         if (!token) {   
-            console.log('unable to find the token');
             return res.status(400).json({
                 success:false,
                 message:"You are not authenticated, Kindly Login first"

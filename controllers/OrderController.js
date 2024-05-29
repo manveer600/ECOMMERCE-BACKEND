@@ -10,8 +10,11 @@ exports.fetchOrderByUser = async (req, res) => {
             orders: orders
         })
     } catch (e) {
-        console.log(e);
-        return res.status(400).json(e);
+        console.log('unable to fetch the order', e.message);
+        return res.status(400).json({
+            success: false,
+            message: e.message
+        });
     }
 }
 
@@ -38,8 +41,6 @@ exports.addOrder = async (req, res) => {
     }
 }
 
-
-
 exports.updateOrder = async (req, res) => {
     const orderId = req.params.orderId;
 
@@ -55,4 +56,23 @@ exports.updateOrder = async (req, res) => {
     }
 
 
+}
+
+exports.fetchAllOrders = async (req, res) => {
+    try {
+        const orders = await OrdersModel.find({}).populate('loggedInUserId');
+        console.log('all orders found', orders);
+        console.log('orders.length is', orders.length);
+        return res.status(201).json({
+            success: true,
+            message: 'Orders Fetched Successfully',
+            orders: orders
+        })
+    } catch (e) {
+        console.log('unable to fetch the order', e.message);
+        return res.status(400).json({
+            success: false,
+            message: e.message
+        });
+    }
 }

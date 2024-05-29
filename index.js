@@ -10,6 +10,7 @@ const UserRoutes = require('./routes/UserRoutes.js');
 const CartRoutes = require('./routes/CartRoutes.js');
 const OrderRoutes = require('./routes/OrderRoutes.js');
 const morgan = require('morgan');
+const e = require('express');
 const stripe = require("stripe")('sk_test_51PBZbsSAM9FrO44uvgYyrd6H1jAiqC9iFS0SrPWoEmUX9WgeS0h3akvAvPsOAzdFjgfaTDknlM8CZLPH3vCFKepL00l1NMpbkn');
 
 require('dotenv').config();
@@ -31,18 +32,23 @@ server.use(cors({
 ));
 
 
-server.get('/', (req,res) => {
-  return res.status(200).json({
-    success:true,
-    message:'I am at home'
-  })
-})
 
 server.use(cookieParser());
 server.use(morgan('dev'));
 server.use(express.json());
+server.use('/products', ProductRouter);
+server.use('/brands', BrandRouter);
+server.use('/categories', CategoryRouter);
+server.use('/users', UserRoutes);
+server.use('/carts', CartRoutes);
+server.use('/orders', OrderRoutes);
 
-
+server.get('/', (req, res) => {
+  return res.status(200).json({
+    success: true,
+    message: 'I am at home'
+  })
+})
 
 server.post("/create-payment-intent", async (req, res) => {
   try {
@@ -54,21 +60,18 @@ server.post("/create-payment-intent", async (req, res) => {
     });
 
 
-    res.send({
+    res.status(200).send({
       clientSecret: paymentIntent.client_secret,
     });
 
   } catch (err) {
     console.log("error occured while processing transaction", err);
+    res.status(400).json({
+      message: err.message
+    })
   }
 
 });
-server.use('/products', ProductRouter);
-server.use('/brands', BrandRouter);
-server.use('/categories', CategoryRouter);
-server.use('/users', UserRoutes);
-server.use('/carts', CartRoutes);
-server.use('/orders', OrderRoutes);
 
 server.listen(PORT, () => {
   console.log(`Server is up and running at port ${PORT}`);

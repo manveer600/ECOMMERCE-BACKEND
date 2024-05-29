@@ -44,7 +44,7 @@ module.exports.sendEmail = async function (email, subject, text, html) {
             console.log('Email has been sent')
             return true;
         } catch (err) {
-            console.log(err);
+            console.log('Unable to send the mail', err);
             return false;
         }
     }
@@ -52,3 +52,17 @@ module.exports.sendEmail = async function (email, subject, text, html) {
     const emailSent = await sendMail(transporter, mailOptions);
     return emailSent;
 }
+
+module.exports.generateDigitOtp = async function(length) {
+    let otp = '';
+    const digits = '0123456789';
+  
+    for (let i = 0; i < length; i++) {
+      otp += digits[Math.floor(Math.random() * 10)];
+    }
+    console.log('opt is this',otp);
+    return otp;
+  }
+ 
+  
+  

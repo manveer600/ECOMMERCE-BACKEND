@@ -48,14 +48,8 @@ userSchema.set('toJSON', {  //JSON ISLIYE BECAUSE HUM REQUEST JSON ME SEND KR RH
 
 userSchema.methods.createResetPasswordToken = async function () {
     const resetToken = await crypto.randomBytes(20).toString('hex');
-    console.log("resetToken", resetToken);
 
     const hashedCryptoResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
-    console.log('hashedCryptoResetToken', hashedCryptoResetToken);
-
-
-
-
 
     this.forgotPasswordToken = hashedCryptoResetToken ;
     this.forgotPasswordExpiry = Date.now() + 15*60*1000;

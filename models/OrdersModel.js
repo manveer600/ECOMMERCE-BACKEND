@@ -1,35 +1,35 @@
 const mongoose = require('mongoose');
 const orderSchema = mongoose.Schema({
 
-    items: 
-        { 
-            type: [mongoose.Schema.Types.Mixed] ,
-            required:true
-        },
-    totalAmount:{
-        type:Number,
-        required:true,
+    items:
+    {
+        type: [mongoose.Schema.Types.Mixed],
+        required: true
     },
-    totalAmount:{
-        type:Number,
-        required:true,
+    totalAmount: {
+        type: Number,
+        required: true,
     },
-    loggedInUserId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User',
-        required:true
+    totalAmount: {
+        type: Number,
+        required: true,
     },
-    paymentMethod:{
-        type:String,
-        required:true,
+    loggedInUserId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
-    selectedAddress:{
-        type:[mongoose.Schema.Types.Mixed],
-        required:true,
+    paymentMethod: {
+        type: String,
+        required: true,
     },
-    status:{
-        type:String,
-        default:'pending'
+    selectedAddress: {
+        type: [mongoose.Schema.Types.Mixed],
+        required: true,
+    },
+    status: {
+        type: String,
+        default: 'pending'
     }
 
 });

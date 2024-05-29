@@ -9,8 +9,8 @@ exports.createProduct = async (req, res) => {
             product: newProduct
         })
     } catch (err) {
-        console.log('Error creating a product', err);
-        return res.status(500).json({ message: 'Error creating a product' });
+        console.log('Error creating a product', err.message);
+        return res.status(500).json({ success:false,message: err.message });
 
     }
 }
@@ -55,8 +55,8 @@ exports.fetchAllProducts = async (req, res) => {
             totalDocs:totalDocs
         })
     } catch (err) {
-        console.log('Error getting a product', err);
-        return res.status(500).json({ message: 'Error getting a product' });
+        console.log('Error getting a product', err.message);
+        return res.status(500).json({ success:false,message:  err.message });
     }
 }
 

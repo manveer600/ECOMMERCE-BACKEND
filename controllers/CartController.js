@@ -10,7 +10,7 @@ exports.fetchCartByUser = async (req, res) => {
             cart: cart
         })
     } catch (e) {
-        console.log(e);
+        console.log("error while fetching card", e);
         return res.status(400).json(e);
     }
 }
@@ -43,11 +43,8 @@ exports.updateItemsInCart = async (req, res) => {
     const userId = req.user.id;
     const productId = req.params.productId;
     const quantity = req.body.quantity;
-    console.log(quantity);
     const data = await CartModel.findOneAndUpdate({ userId: userId, productId: productId }, {quantity:quantity}, { new: true });
-    console.log('data', data);
     const populatedData = await data.populate(['userId', 'productId']);
-    console.log('populateddata', populatedData);
     return res.status(200).json({
         success: true,
         message: "Cart Updated Successfully",
