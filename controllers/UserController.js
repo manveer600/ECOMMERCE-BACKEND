@@ -47,13 +47,15 @@ exports.createUser = async (req, res) => {
 
         res.cookie('token', token, cookieOptions);
         user.password = undefined;
-        await sendEmail(email, 'Your One Time Password', "", `<h3><b>Your generated 6 digit otp is this ${await generateDigitOtp(6)}</b></h3>`);
-
+        const generatedOtp = await generateDigitOtp(6);
+        // await sendEmail(email, 'Your One Time Password', "", `<h3><b>Your generated 6 digit otp is this ${generatedOtp}</b></h3>`);
+        console.log('generatedOtpBackend', generatedOtp);
         return res.status(200).json({
             success: true,
             message: 'User registered successfully',
             user,
-            token
+            token,
+            OTP:generatedOtp
         })
 
     } catch (e) {
@@ -104,11 +106,8 @@ exports.checkAuth = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        console.time('findingUser'); 
         const existingUser = await UserModel.findById(userId, 'email role address orders');
-        console.timeEnd('findingUser');
 
-        console.log("existingUser", existingUser);
         if (!existingUser) {
             return res.status(404).json({
                 success: false,

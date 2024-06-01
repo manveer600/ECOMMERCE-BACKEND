@@ -19,7 +19,6 @@ exports.fetchAllProducts = async (req, res) => {
     let query = ProductModel.find({deleted:{$ne:true}});
     let totalProductQuery = ProductModel.find({});
 
-
     if (req.query.category) {
         query = query.find({ category: req.query.category });
         totalProductQuery = totalProductQuery.find({ category: req.query.category });
@@ -36,8 +35,6 @@ exports.fetchAllProducts = async (req, res) => {
     }
 
     const totalDocs = await totalProductQuery.count();
-
-
     if (req.query._page && req.query._limit) {
         const pageSize = req.query._limit;
         const page = req.query._page;
@@ -98,5 +95,19 @@ exports.updateProduct = async (req, res) => {
         })
     }
 
+}
+
+exports.deleteProduct = async(req,res) => {
+    const {id} = req.body;
+    console.log("id", id);
+    const productToBeDeleted = await ProductModel.findById(id);
+    productToBeDeleted.deleted = true;
+    await productToBeDeleted.save();
+
+    console.log('product to be deleted', productToBeDeleted);
+    return res.status(200).json({
+        success:true,
+        message:'Product deleted successfully'
+    })
 }
 
