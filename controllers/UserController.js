@@ -10,6 +10,37 @@ const cookieOptions = {
     sameSite: "None"
 }
 
+exports.generateOTP = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({
+            message: 'Every field is required'
+        })
+    }
+    const user = await UserModel.findOne({ email: email });
+    if (user) {
+        return res.status(400).json({
+            success: false,
+            message: 'User already registered, Go and login'
+        })
+    }
+    try {
+        const generatedOtp = await generateDigitOtp(6);
+        const subject = 'Your One Time Password';
+        const text = `<h3><b>Your generated 6 digit otp is this ${generatedOtp}.</b></h3>`
+        const html = `<h3><b>Your generated 6 digit otp is this ${generatedOtp}.</b></h3> <h3><b>Remember it is only valid for 5 mins.</b></h3>`;
+        await sendEmail(email, subject, text, html);
+        return res.status(200).json({
+            success: true,
+            message: 'User registered successfully',
+            data: generatedOtp
+        })
+    } catch (e) {
+        console.log('error creating user', e.message);
+        return res.status(400).json({ success: false, message: e.message });
+    }
+}
 
 exports.createUser = async (req, res) => {
     const { email, password } = req.body;
@@ -47,15 +78,11 @@ exports.createUser = async (req, res) => {
 
         res.cookie('token', token, cookieOptions);
         user.password = undefined;
-        const generatedOtp = await generateDigitOtp(6);
-        // await sendEmail(email, 'Your One Time Password', "", `<h3><b>Your generated 6 digit otp is this ${generatedOtp}</b></h3>`);
-        console.log('generatedOtpBackend', generatedOtp);
         return res.status(200).json({
             success: true,
             message: 'User registered successfully',
-            user,
+            data: user,
             token,
-            OTP:generatedOtp
         })
 
     } catch (e) {
@@ -65,7 +92,6 @@ exports.createUser = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
-    console.log('i am inside login user backend');
     const { email, password } = req.body;
     if (!email || !password) {
         return res.status(400).json({
@@ -97,7 +123,7 @@ exports.loginUser = async (req, res) => {
     return res.json({
         success: true,
         message: 'User loggedIn successfully',
-        user,
+        data: user,
         token: token
     });
 }
@@ -116,7 +142,7 @@ exports.checkAuth = async (req, res) => {
         }
 
         return res.status(200).json({
-            user: existingUser,
+            data: existingUser,
             token: req.user.token,
             success: true,
         })
