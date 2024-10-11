@@ -37,9 +37,13 @@ cloudinary.config({
 
 server.use(cors({
   origin: process.env.FRONTEND_URL,
-  credentials: true
-}
-));
+  credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: 'Content-Type,Authorization'
+}));
+server.options('*', cors());
+
+
 server.use(cookieParser());
 server.use(morgan('dev'));
 server.use(express.json());

@@ -1,22 +1,26 @@
 const jwt = require('jsonwebtoken');
-module.exports.isLoggedIn = async(req, res, next) => {
+module.exports.isLoggedIn = async (req, res, next) => {
     try {
-        const token  = req.cookies.token;
-        if (!token) {   
+        const findingToken = Date.now();
+        const token = req.cookies.token;
+        console.log('finding token', Date.now() - findingToken, "ms");
+        console.log('token not found');
+        if (!token) {
             return res.status(400).json({
-                success:false,
-                message:"You are not authenticated, Kindly Login first"
+                success: false,
+                message: "You are not authenticated, Kindly Login first"
             })
         }
-
+        const verifyStart = Date.now();
         const userDetails = await jwt.verify(token, process.env.SECRET);
-        req.user = {...userDetails, token};
+        console.log('Time taken for JWT verification:', Date.now() - verifyStart, 'ms');
+        req.user = { ...userDetails, token };
         next();
-        
+
     } catch (e) {
         return res.status(400).json({
-            success:false,
-            message:e.message
+            success: false,
+            message: e.message
         })
     }
 }

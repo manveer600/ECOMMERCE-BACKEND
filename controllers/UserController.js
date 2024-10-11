@@ -131,9 +131,9 @@ exports.loginUser = async (req, res) => {
 exports.checkAuth = async (req, res) => {
     try {
         const userId = req.user.id;
-
+        const start = Date.now();
         const existingUser = await UserModel.findById(userId, 'email role address orders');
-
+        console.log('Time taken for DB lookup:', Date.now() - start, 'ms');
         if (!existingUser) {
             return res.status(404).json({
                 success: false,
