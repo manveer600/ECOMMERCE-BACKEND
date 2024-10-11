@@ -249,7 +249,6 @@ exports.forgotPassword = async (req, res) => {
             })
         }
 
-
         const resetToken = await user.createResetPasswordToken();
         await user.save();
 
@@ -257,7 +256,7 @@ exports.forgotPassword = async (req, res) => {
         const url = `${process.env.FRONTEND_URL}/resetPassword/${resetToken}`
         const subject = 'Reset Password Link';
         const text = "Your reset password link";
-        const html = `<h3><b>Your reset password link is this <a href='${url}'> Reset Password Link</a>. You can click here to reset your password.<b/><h3></br>Remember the link is only valid till 15 mins.`
+        const html = `<h3><b>Your reset password link is this <a href='${url}'>Link</a>. You can click here to reset your password.<b/><h3></br>Remember the link is only valid till 15 mins.`
         const emailSend = await sendEmail(email, subject, text, html);
         if (emailSend) {
             return res.status(200).json({
