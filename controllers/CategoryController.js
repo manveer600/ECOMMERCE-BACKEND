@@ -18,8 +18,26 @@ const createCategory = async (req, res) => {
     console.log('adding category');
     console.log(req.body);
     try {
+        const existingCategory = await CategoryModel.findOne(
+            {
+                $or: [
+                    {
+                        label: { $regex: req.body.value, $options: 'i' }
+                    },
+                    {
+                        value: { $regex: req.body.value, $options: 'i' }
+                    }
+                ]
+            }
+        );
+        console.log('existingCategory is', existingCategory);
+        if (existingCategory) {
+            return res.status(400).json({
+                success: false,
+                message: 'Category Already exists',
+            })
+        }
         const newCategory = await CategoryModel.create({ label: req.body.value, value: req.body.value });
-
         return res.status(201).json({
             success: true,
             message: 'New category has been created',
