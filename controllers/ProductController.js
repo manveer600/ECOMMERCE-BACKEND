@@ -208,13 +208,26 @@ exports.fetchProductById = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
     const id = req.params.id;
+    console.log('req.body', req.body);
     try {
-        const product = await ProductModel.findByIdAndUpdate(id, req.body, { new: true });    //{new:true} to view the new updated product not the old one
+        const product = await ProductModel.findByIdAndUpdate(id, req.body, { new: true });
+        product.images[0] = req.body.image1;
+        product.images[1] = req.body.image2;
+        product.images[2] = req.body.image3;
+
+        await product.save();
+
+        console.log('product is this now', product);
         if (product) {
             return res.status(200).json({
                 success: true,
                 message: 'Product updated with the given id',
-                product: product
+                data: product
+            })
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: 'Error updating product. Please try later!',
             })
         }
     } catch (e) {
@@ -228,15 +241,17 @@ exports.updateProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
     const { id } = req.body;
-    console.log("id", id);
+    console.log('req.body is', req.body);
     const productToBeDeleted = await ProductModel.findById(id);
+    console.log('productToBeDeleted', productToBeDeleted)
     productToBeDeleted.deleted = true;
     await productToBeDeleted.save();
 
-    console.log('product to be deleted', productToBeDeleted);
+    console.log('productToBeDeleted', productToBeDeleted)
     return res.status(200).json({
         success: true,
-        message: 'Product deleted successfully'
+        message: 'Product deleted successfully',
+        data: productToBeDeleted
     })
 }
 

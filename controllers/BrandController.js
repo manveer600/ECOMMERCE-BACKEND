@@ -15,13 +15,14 @@ const fetchBrands = async(req,res) => {
 
 
 const createBrand = async(req,res) => {
+
     try {
-        const newBrand = await BrandModel.create(req.body);
+        const newBrand = await BrandModel.create(req.body.value);
         
         return res.status(201).json({
             success:true,
             message:'New brand has been created',
-            brand:newBrand
+            data:newBrand
         })
     }catch(e){
         return res.status(400).json({message:e});

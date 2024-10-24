@@ -16,7 +16,7 @@ const productSchema = mongoose.Schema({
     },
     discountPercentage:{
         type:Number,
-        required:true,
+        // required:true,
         min:[1, "Min discount must be atleast 1%"],
         max:[100, "Max Price must be atmost 100%"],
     },

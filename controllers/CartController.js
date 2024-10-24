@@ -3,7 +3,7 @@ const CartModel = require("../models/CartModel");
 exports.fetchCartByUser = async (req, res) => {
     const { id } = req.user;
     try {
-        const cart = await CartModel.find({ userId: id }).populate('userId').populate('productId');
+        const cart = await CartModel.find({ userId: id, deleted: false }).populate('userId').populate('productId');
         return res.status(201).json({
             success: true,
             message: 'Cart Fetched Successfully',
@@ -43,7 +43,7 @@ exports.updateItemsInCart = async (req, res) => {
     const userId = req.user.id;
     const productId = req.params.productId;
     const quantity = req.body.quantity;
-    const data = await CartModel.findOneAndUpdate({ userId: userId, productId: productId }, {quantity:quantity}, { new: true });
+    const data = await CartModel.findOneAndUpdate({ userId: userId, productId: productId }, { quantity: quantity }, { new: true });
     const populatedData = await data.populate(['userId', 'productId']);
     return res.status(200).json({
         success: true,
