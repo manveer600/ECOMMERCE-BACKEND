@@ -42,17 +42,28 @@ exports.addOrder = async (req, res) => {
 }
 
 exports.updateOrder = async (req, res) => {
-    const orderId = req.params.orderId;
-
+    const orderId = JSON.stringify(req.params.orderId);
+    console.log('order id to update', orderId);
     try {
-        const order = OrdersModel.findByIdAndUpdate(orderId, req.body, {
-            new: true //SEARCH KI NEW KRNE SE KYA HOGA
-        }, () =>
-            console.log('success while updating')
-        );
-        return res.status(200).json(order);
+        const updatedOrder = await OrdersModel.findOne({
+            _id: orderId
+        });
+        updatedOrder = req.body;
+        await updatedOrder.save();
+        // const updatedOrder = await OrdersModel.findByIdAndUpdate(orderId, req.body, { new: true });
+        if (updatedOrder) {
+            return res.status(200).json({
+                success: true,
+                message: "Order updated successfully",
+                data: updatedOrder
+            });
+        }
     } catch (err) {
-        return res.status(400).json(err);
+        console.log('error while updating order', err);
+        return res.status(400).json({
+            success: false,
+            message: err.message
+        });
     }
 
 
@@ -60,13 +71,27 @@ exports.updateOrder = async (req, res) => {
 
 exports.fetchAllOrders = async (req, res) => {
     try {
-        const orders = await OrdersModel.find({}).populate('loggedInUserId');
-        console.log('all orders found', orders);
-        console.log('orders.length is', orders.length);
+        let sortFilter = {};
+        if (req.query.sort && req.query.order) {
+            const sortOrder = req.query.order === 'asc' ? 1 : -1;
+            sortFilter = { [req.query.sort]: sortOrder };
+            console.log('sortFilter is this', sortFilter);
+            //basically sortFilter = {id:1} or {totalAmount:1}
+        }
+
+        // Pagination
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const totalDocuments = await OrdersModel.countDocuments();
+        console.log('total Docs', totalDocuments);
+        const orders = await OrdersModel.find({}).sort(sortFilter).skip(skip).limit(limit).populate('loggedInUserId');
         return res.status(201).json({
             success: true,
             message: 'Orders Fetched Successfully',
-            orders: orders
+            data: orders,
+            docs: totalDocuments
         })
     } catch (e) {
         console.log('unable to fetch the order', e.message);

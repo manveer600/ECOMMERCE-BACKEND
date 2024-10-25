@@ -147,17 +147,21 @@ exports.fetchAllProducts = async (req, res) => {
     try {
         const where = { deleted: false };
         let sortFilter = {};
+        if (req.query.title) {
+            where.title = { $regex: req.query.title, $options: 'i' };
+        }
+
         if (req.query.category) {
-            where.category = req.query.category;
+            where.category = { $regex: req.query.category, $options: 'i' };
         }
         if (req.query.brand) {
-            where.brand = req.query.brand;
+            where.brand = { $regex: req.query.brand, $options: 'i' };
         }
         if (req.query._sort && req.query._order) {
             const sortOrder = req.query._order === 'asc' ? 1 : -1;
             sortFilter = { [req.query._sort]: sortOrder };
         }
-
+        console.log('where filter is this', where);
         //BASICALLY WE ARE COUNTING THE NUMBER OF DOCUMENTS WITH THE PROVIDED CONDITIONS.
         const totalDocs = await ProductModel.countDocuments(where);
         console.log('total documents', totalDocs);
