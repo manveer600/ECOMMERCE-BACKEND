@@ -1,40 +1,46 @@
 const ProductModel = require("../models/ProductModel");
-const cloudinary = require('cloudinary');
 exports.createProduct = async (req, res) => {
     console.log(req.body);
     try {
         //uploading images and thumbnail to cloudinary
-        try {
-            const result = await cloudinary.v2.uploader.upload(req.body.thumbnail,
-                { folder: 'ecommerce-thumbnails' }
-            );
-            let imagesUrl = [];
-            for (let image of req.body.images) {
-                const result = await cloudinary.v2.uploader.upload(image, { folder: 'ecommerce-images' });
-                console.log('result is this', result);
-                imagesUrl.push(result.url)
-            }
-            if (result) {
-                console.log('url got is this', result.secure_url);
-                req.body.thumbnail = result.secure_url;
-            }
-            if (imagesUrl) {
-                req.body.images = imagesUrl;
-            } else {
-                console.error;
-            }
-        } catch (e) {
-            console.log(e);
-            res.status(500).json({
-                message: "Error uploading to cloudinary"
-            })
-        }
+        // try {
+        //     // const result = await cloudinary.v2.uploader.upload(req.body.thumbnail,
+        //     //     { folder: 'ecommerce-thumbnails' }
+        //     // );
+        //     let imagesUrl = [];
+        //     // for (let image of req.body.images) {
+        //     //     const result = await cloudinary.v2.uploader.upload(image, { folder: 'ecommerce-images' });
+        //     //     console.log('result is this', result);
+        //     //     imagesUrl.push(result.url)
+        //     // }
+        //     // if (result) {
+        //     //     console.log('url got is this', result.secure_url);
+        //     //     req.body.thumbnail = result.secure_url;
+        //     // }
+        //     // if (imagesUrl) {
+        //     //     req.body.images = imagesUrl;
+        //     // } else {
+        //     //     console.error;
+        //     // }
+        // } catch (e) {
+        //     console.log(e);
+        //     res.status(500).json({
+        //         message: "Error uploading to cloudinary"
+        //     })
+        // }
+
 
         const newProduct = await ProductModel.create(req.body);
-        return res.status(200).json({
-            success: true,
-            message: 'Product created successfully',
-            product: newProduct
+        console.log('new product is this', newProduct);
+        if (newProduct)
+            return res.status(200).json({
+                success: true,
+                message: 'Product created successfully',
+                data: newProduct
+            })
+        else return res.status(400).json({
+            success: false,
+            message: 'Unable to create the product',
         })
     } catch (err) {
         console.log('Error creating a product', err.message);

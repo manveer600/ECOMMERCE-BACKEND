@@ -3,11 +3,17 @@ const CartModel = require("../models/CartModel");
 exports.fetchCartByUser = async (req, res) => {
     const { id } = req.user;
     try {
-        const cart = await CartModel.find({ userId: id, deleted: false }).populate('userId').populate('productId');
-        return res.status(201).json({
-            success: true,
-            message: 'Cart Fetched Successfully',
-            cart: cart
+        const cart = await CartModel.find({ userId: id }).populate('userId').populate('productId');
+        console.log('cart is this', cart);
+        if (cart)
+            return res.status(201).json({
+                success: true,
+                message: 'Cart Fetched Successfully',
+                data: cart
+            })
+        else return res.status(201).json({
+            success: false,
+            message: 'No items in the cart',
         })
     } catch (e) {
         console.log("error while fetching card", e);
@@ -32,7 +38,7 @@ exports.addToCart = async (req, res) => {
         return res.status(201).json({
             success: true,
             message: 'Cart has been created',
-            cart: populatedCart
+            data: populatedCart
         })
     } catch (e) {
         return res.status(400).json({ message: e });

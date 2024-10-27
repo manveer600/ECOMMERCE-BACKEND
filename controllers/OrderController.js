@@ -4,10 +4,16 @@ exports.fetchOrderByUser = async (req, res) => {
     const userId = req.user.id;
     try {
         const orders = await OrdersModel.find({ loggedInUserId: userId }).populate('loggedInUserId');
-        return res.status(201).json({
-            success: true,
-            message: 'Order Fetched Successfully',
-            orders: orders
+        console.log('user orders fetched successfully', orders);
+        if (orders)
+            return res.status(201).json({
+                success: true,
+                message: 'Order Fetched Successfully',
+                data: orders
+            })
+        else return res.status(400).json({
+            success: false,
+            message: 'No orders found',
         })
     } catch (e) {
         console.log('unable to fetch the order', e.message);
@@ -42,15 +48,14 @@ exports.addOrder = async (req, res) => {
 }
 
 exports.updateOrder = async (req, res) => {
-    const orderId = JSON.stringify(req.params.orderId);
+    const orderId = req.params.orderId;
     console.log('order id to update', orderId);
     try {
         const updatedOrder = await OrdersModel.findOne({
             _id: orderId
         });
-        updatedOrder = req.body;
+        updatedOrder.status = req.body.status;
         await updatedOrder.save();
-        // const updatedOrder = await OrdersModel.findByIdAndUpdate(orderId, req.body, { new: true });
         if (updatedOrder) {
             return res.status(200).json({
                 success: true,
