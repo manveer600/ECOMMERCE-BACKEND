@@ -14,7 +14,7 @@ module.exports.createJwtToken = async function (id, email) {
 }
 
 module.exports.sendEmail = async function (email, subject, text, html) {
-    //USE MAIL TRAP INSTEAD OF GMAIL
+    console.log('sending email to this ', email);
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         host: "smtp.gmail.com",
